@@ -15,13 +15,16 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
     for (const post of ops.posts.creates) {
       console.log(post.record.text)
     }
-
-    const postsToDelete = ops.posts.deletes.map((del) => del.uri)
-    const postsToCreate = ops.posts.creates
-      .filter((create) => {
-        // only crypto-related posts
-        return create.record.text.toLowerCase().includes('crypto')
-      })
+    
+    const filterValues = ['nox', 'tox', 'pox'];
+const postsToDelete = ops.posts.deletes.map((del) => del.uri);
+const postsToCreate = ops.posts.creates.filter((create) => {
+  // only crypto-related posts
+  const lowercaseText = create.record.text.toLowerCase();
+  console.log("lmao", filterValues.some(value => lowercaseText.includes(value)));
+  return filterValues.some(value => lowercaseText.includes(value));
+})
+      
       .map((create) => {
         // map crypto-related posts to a db row
         return {
@@ -32,6 +35,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
           indexedAt: new Date().toISOString(),
         }
       })
+      
 
     if (postsToDelete.length > 0) {
       await this.db
