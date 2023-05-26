@@ -16,15 +16,25 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
       console.log(post.record.text)
     }
     
-    const filterValues = ['nox', 'tox', 'pox'];
+    const filterValues = ['Crypto', 'NSFW', 'Cat'];
+const filterVal1 = filterValues.map((val) => {
+  return val.toLowerCase();
+});
+const banValues = ['twitter', 'pepe'];
+const banVal1 = banValues.map((val) => {
+  return val.toLowerCase();
+});
+
 const postsToDelete = ops.posts.deletes.map((del) => del.uri);
+
 const postsToCreate = ops.posts.creates.filter((create) => {
-  // only crypto-related posts
   const lowercaseText = create.record.text.toLowerCase();
-  console.log("lmao", filterValues.some(value => lowercaseText.includes(value)));
-  return filterValues.some(value => lowercaseText.includes(value));
-})
-      
+  
+  const includesFilterValues = filterVal1.some(value => lowercaseText.includes(value));
+  const includesBanValues = banVal1.some(value => lowercaseText.includes(value));
+
+  return includesFilterValues && !includesBanValues;
+})      
       .map((create) => {
         // map crypto-related posts to a db row
         return {
