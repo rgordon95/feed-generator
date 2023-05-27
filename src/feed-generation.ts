@@ -6,7 +6,7 @@ import { validateAuth } from './auth'
 export default function (server: Server, ctx: AppContext) {
   server.app.bsky.feed.getFeedSkeleton(async ({ params, req }) => {
     if (
-      params.feed !== 'at://did:example:alice/app.bsky.feed.generator/crypto-only'
+      params.feed !== 'at://did:plc:f7gdbr6mkxcukdnjd7vdl4q4/app.bsky.feed.generator/ccc'
     ) {
       throw new InvalidRequestError(
         'Unsupported algorithm',
